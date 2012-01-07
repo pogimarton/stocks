@@ -1,9 +1,5 @@
 package client;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.TreeMap;
 import java.util.Vector;
@@ -135,7 +131,4 @@ public class StockManager {
 		//TODO ez nem tetszik nem lenne jobb ha null al terne vissza
 		return new TreeMap<String,Integer>();
 	}
-	
-	
-
 }

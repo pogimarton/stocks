@@ -13,4 +13,8 @@
     <string name="menu_quit">Quit</string>
     <string name="menu_all">Select All</string>
     <string name="menu_none">Select None</string>
+    <string name="select_day_">Select day:</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="select_time">Select day to fetch</string>
 </resources>

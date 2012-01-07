@@ -21,10 +21,9 @@ public final class R {
         public static final int zoom_out=0x7f080003;
     }
     public static final class date_picker {
-        public static final int cancel_button=0x7f100003;
+        public static final int cancel_button=0x7f100002;
         public static final int from_date=0x7f100000;
-        public static final int ok_button=0x7f100002;
-        public static final int to_date=0x7f100001;
+        public static final int ok_button=0x7f100001;
     }
     public static final class drawable {
         public static final int app_window_cross32=0x7f020000;
@@ -129,6 +128,7 @@ public final class R {
     public static final class string {
         public static final int app_about=0x7f060001;
         public static final int app_name=0x7f060000;
+        public static final int cancel=0x7f06000f;
         public static final int menu_all=0x7f06000b;
         public static final int menu_favorites=0x7f060006;
         public static final int menu_filters=0x7f060007;
@@ -136,6 +136,9 @@ public final class R {
         public static final int menu_none=0x7f06000c;
         public static final int menu_quit=0x7f06000a;
         public static final int menu_settings=0x7f060008;
+        public static final int ok=0x7f06000e;
+        public static final int select_day_=0x7f06000d;
+        public static final int select_time=0x7f060010;
         public static final int selector_button=0x7f060005;
         public static final int title_favorites=0x7f060003;
         public static final int title_filters=0x7f060004;

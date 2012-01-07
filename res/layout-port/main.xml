@@ -19,7 +19,7 @@
     android:orientation="horizontal"
     android:background="#1e1e1e"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="0dp"
     android:layout_weight="1" />
   <include
     layout="@layout/controls"

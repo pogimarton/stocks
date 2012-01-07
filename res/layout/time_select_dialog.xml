@@ -9,20 +9,8 @@
     android:layout_height="wrap_content"
     android:gravity="center"
     android:padding="10dp">
-    <TextView
-      android:text="From:"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content" />
     <DatePicker
       android:id="@+date_picker/from_date"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content" />
-    <TextView
-      android:text="To:"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content" />
-    <DatePicker
-      android:id="@+date_picker/to_date"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content" />
     <LinearLayout
@@ -31,16 +19,16 @@
       android:paddingTop="30dp"
       android:gravity="center_horizontal">
       <Button
-        android:text="OK"
+        android:text="@string/ok"
         android:id="@+date_picker/ok_button"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:textSize="20dp" />
       <Button
+        android:text="@string/cancel"
         android:layout_width="100dp"
         android:id="@+date_picker/cancel_button"
         android:layout_height="wrap_content"
-        android:text="Cancel"
         android:textSize="20dp" />
     </LinearLayout>
   </LinearLayout>
