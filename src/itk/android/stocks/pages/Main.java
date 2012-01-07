@@ -3,6 +3,7 @@ package itk.android.stocks.pages;
 
 import itk.android.stocks.chart.StockChart;
 import itk.ppke.stock.GetDataThread;
+import itk.ppke.stock.GetPaperNameThread;
 import itk.ppke.stock.R;
 
 
@@ -50,6 +51,7 @@ public class Main extends Activity {
 	private XYMultipleSeriesDataset dataset;
 	private String[] paperNames;
 	public Handler stockDataHandler;
+	public Handler paperNameHandler;
 	
 	public TimeSeries currentPriceSeries;
 	public TimeSeries currentVolumeSeries;
@@ -231,14 +233,7 @@ public class Main extends Activity {
 			
 			GetDataThread getDataThread = new GetDataThread(stockDataHandler, paperName,fromInterval, toInterval, getApplicationContext());
 			
-			
-			
-			
 
-			
-			
-		
-			
 
 			//dataset.addSeries(demo.volumeChart.getTimeSeries(demo.volumeChart.paperName));
 			
@@ -264,7 +259,68 @@ public class Main extends Activity {
 	
 
 	private void getPapersFromServer() {
+		
+		
 		paperNames = new String[] { "OTP", "RICHTER", "HUF", "DAX", "BUX", "APPLE", "ITK", "TCOM", "AFF", "NSN" };
+		
+		/*paperNameHandler = new Handler() {
+
+			@Override
+			public void handleMessage(Message msg) {
+
+				super.handleMessage(msg);
+				if (msg.what == 0) {
+				//	String s = msg.getData().getString("paperName") + " " + 
+				//			 msg.getData().getString("date") + " " +
+				//			 msg.getData().getString("time") + " " +
+				//			 msg.getData().getString("price") + " " +
+				//			 msg.getData().getString("volume");
+					
+					try {
+						//demo.append(,, );
+						
+						Date tmpDate = dateTimeFormat.parse(msg.getData().getString("date")+" "+msg.getData().getString("time"));
+						//igy kell hozzaadni adatot
+						double tmpprice =  Double.parseDouble(msg.getData().getString("price"));
+						Log.d("Data", dateTimeFormat.format(tmpDate)+"  "+ tmpprice+"");
+						double tmpvolume  = Integer.parseInt(msg.getData().getString("volume"))/10000;
+						currentPriceSeries.add(tmpDate, tmpprice );
+						currentVolumeSeries.add(tmpDate, tmpvolume);
+						
+					} catch (NumberFormatException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					chart.repaint();
+
+				}
+				if(msg.what == 1)
+				{
+					progressDialog.dismiss();
+				}
+			}
+		};
+		
+		
+		progressDialog = ProgressDialog.show(Main.this, "", "Doing...");
+		
+		
+		GetPaperNameThread getDataThread = new GetPaperNameThread(paperNameHandler);
+*/
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 	}
 	
 	private String getInfobarFormatPaperNames() {
@@ -281,6 +337,7 @@ public class Main extends Activity {
 //	}
 	
 	private void setupRenderer(XYMultipleSeriesRenderer renderer) {
+		
 		renderer.setChartTitleTextSize(0);
 		renderer.setChartTitle("");
 		renderer.setXTitle("");
