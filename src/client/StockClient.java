@@ -3,22 +3,51 @@ package client;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.UnknownHostException;
 
 import shared.*;
 
 public class StockClient {
 	private static String				host	= "192.168.1.3";
 	private static int					port	= 12000;
-	private static Socket				socket	= null;
+	private  Socket				socket;
 	
-	private static ObjectOutputStream	oos		= null;
-	private static ObjectInputStream	ois		= null;
+	private  ObjectOutputStream	oos	;
+	private  ObjectInputStream	ois	;
 	
-	public static StockServerResponse processRequest (StockClientRequest request) {
+	
+	
+	
+	
+	
+	
+	public StockClient() {
+		super();
+		try {
+			this.socket = new Socket (host, port);
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		this.oos = null;
+		this.ois = null;
+	}
+
+
+
+
+
+
+
+	public StockServerResponse processRequest (StockClientRequest request) {
 		StockServerResponse response = null;
 		try {
-			socket = new Socket (host, port);
+			//socket = 
 			oos = new ObjectOutputStream	(socket.getOutputStream());
 			ois = new ObjectInputStream		(socket.getInputStream());
 			

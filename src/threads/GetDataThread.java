@@ -225,8 +225,8 @@ public class GetDataThread {
 				int day = Integer.parseInt(dayFormat.format(tradeDateDate));
 
 				stockDate = new StockDate(year, mounth, day);
-
-				stocksWithoutName = StockManager.getDayTradesOfPaper(paperName, stockDate);
+				StockManager stockManager = new StockManager();
+				stocksWithoutName = stockManager.getDayTradesOfPaper(paperName, stockDate);
 
 				stocksWithName.put(paperName, stocksWithoutName);
 				// databaseManager.deleteStockData(paperName, stockDate);
@@ -265,8 +265,8 @@ public class GetDataThread {
 		StockDate stockDate = new StockDate(year, mounth, day);
 
 		StockTime stockTime = new StockTime(hour, minute, second);
-
-		stocksWithoutName = StockManager.getFromTimeTradesOfPaper(paperName, stockDate, stockTime);
+		StockManager stockManager = new StockManager();
+		stocksWithoutName = stockManager.getFromTimeTradesOfPaper(paperName, stockDate, stockTime);
 
 		stocksWithName.put(paperName, stocksWithoutName);
 		Log.e("savabytime saved data", stocksWithName.toString());
