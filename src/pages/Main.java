@@ -30,7 +30,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -61,10 +60,19 @@ public class Main extends Activity {
 	private ProgressDialog progressDialog;
 	
 	private String[] paperNames;
+	
+	
+	private String paperName;
+	private Date fromDate;
+	private Vector<String> favPaperNames;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		
+		favPaperNames = new Vector<String>();
+		
 		setContentView(R.layout.main);
 
 		// get element references
@@ -73,7 +81,28 @@ public class Main extends Activity {
 		// final ImageButton selectorListAllFav = (ImageButton)
 		// findViewById(R.selector.list);
 
-		getPapersFromServer();
+		
+		//paper names handlerenek beallitase
+		setPaperNameHandler();
+		
+		//paper names adatainak lekerese
+		new GetPaperNameThread(paperNameHandler);
+		
+		
+		//favorit lekekerese
+		getFavPaperNames();
+	
+		//infobar handlerenek beallitasa
+		setInfobarHandler();
+		
+		
+		
+		//infobar adatainak lekerese
+		new GetInfobarThread(getInfobarHandler, favPaperNames);
+		
+		
+		
+		
 
 		final ImageButton controlRefresh = (ImageButton) findViewById(R.controls.refresh);
 		final ImageButton controlTimeSelect = (ImageButton) findViewById(R.controls.time_select);
@@ -82,8 +111,11 @@ public class Main extends Activity {
 		
 		final TextView infobarTextView = (TextView) findViewById(R.infobar.textview);
 		infobarTextView.setText(R.string.infobar_default);
-		getInfobar();
+		
+		
+		
 
+		
 		final Dialog timeSelectDialog = new Dialog(this);
 		timeSelectDialog.setContentView(R.layout.time_select_dialog);
 		timeSelectDialog.setTitle("Select day");
@@ -103,13 +135,33 @@ public class Main extends Activity {
 
 		controlRefresh.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				Toast.makeText(getApplicationContext(), "controlRefresh", Toast.LENGTH_SHORT).show();
+				
+				getPaperName();
+				getFromDate();
+				
+				progressDialog = ProgressDialog.show(Main.this, "", "Loading...");
+				new GetDataThread(stockDataHandler, paperName, fromDate, fromDate, getApplicationContext());
+
+				//favorit lekekerese
+				getFavPaperNames();
+			
+				//infobar handlerenek beallitasa
+				setInfobarHandler();
+				
+				
 			}
 		});
 
 		controlTimeSelect.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				timeSelectDialog.show();
+				
+				getPaperName();
+				getFromDate();
+				
+				progressDialog = ProgressDialog.show(Main.this, "", "Loading...");
+				new GetDataThread(stockDataHandler, paperName, fromDate, fromDate, getApplicationContext());
+				
 			}
 		});
 
@@ -142,91 +194,44 @@ public class Main extends Activity {
 
 	}
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-		if (chart == null) {
-			renderer = new XYMultipleSeriesRenderer();
-			setupRenderer(renderer);
 
-			final LinearLayout chartLayout = (LinearLayout) findViewById(R.main.chart);
 
-			final StockChart demo = new StockChart();
+	private void setInfobarHandler() {
+		getInfobarHandler = new Handler() {
 
-			final SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd" + " " + "HH:mm:ss");
+			StringBuilder infoBarStringBuilder = new StringBuilder();
 
-			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-			//SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+			@Override
+			public void handleMessage(Message msg) {
 
-			dataset = new XYMultipleSeriesDataset();
-			TimeSeries priceSeries = new TimeSeries(demo.priceChart.paperName);
-			TimeSeries volumeSeries = new TimeSeries(demo.volumeChart.paperName);
-			dataset.addSeries(priceSeries);
-			dataset.addSeries(volumeSeries);
-			currentPriceSeries = priceSeries;
-			currentVolumeSeries = volumeSeries;
-
-			stockDataHandler = new Handler() {
-
-				@Override
-				public void handleMessage(Message msg) {
-
-					super.handleMessage(msg);
-					if (msg.what == 0) {
-						// String s = msg.getData().getString("paperName") + " "
-						// +
-						// msg.getData().getString("date") + " " +
-						// msg.getData().getString("time") + " " +
-						// msg.getData().getString("price") + " " +
-						// msg.getData().getString("volume");
-
-						try {
-							// demo.append(,, );
-
-							Date tmpDate = dateTimeFormat.parse(msg.getData().getString("date") + " " + msg.getData().getString("time"));
-							// igy kell hozzaadni adatot
-							double tmpprice = Double.parseDouble(msg.getData().getString("price"));
-							double tmpvolume = Integer.parseInt(msg.getData().getString("volume")) / 10000;
-							currentPriceSeries.add(tmpDate, tmpprice);
-							currentVolumeSeries.add(tmpDate, tmpvolume);
-
-						} catch (NumberFormatException e) {
-							e.printStackTrace();
-						} catch (ParseException e) {
-							e.printStackTrace();
-						}
-						chart.repaint();
-					}
-					if (msg.what == 1) {
-						progressDialog.dismiss();
-					}
+				super.handleMessage(msg);
+				if (msg.what == 0) {
+					// igy kell hozzaadni adatot
+					infoBarStringBuilder.append(msg.getData().getString("paperName") + " " + msg.getData().getString("price") + " | ");
 				}
-			};
-
-			String paperName = "OTP";
-			Date fromInterval = null;
-			Date toInterval = null;
-			try {
-				fromInterval = dateFormat.parse("2008-02-25");
-				toInterval = dateFormat.parse("2008-02-25");
-
-			} catch (ParseException e) {
-				e.printStackTrace();
+				if (msg.what == 1) {
+					// progressDialog.dismiss();
+					sendInfoBarString();
+				}
 			}
-			progressDialog = ProgressDialog.show(Main.this, "", "Loading...");
 
-			new GetDataThread(stockDataHandler, paperName, fromInterval, toInterval, getApplicationContext());
+			public void sendInfoBarString() {
+				Main.this.setInfobar(infoBarStringBuilder.toString());
+			}
 
-			// dataset.addSeries(demo.volumeChart.getTimeSeries(demo.volumeChart.paperName));
-
-			chart = ChartFactory.getTimeChartView(this, dataset, renderer, "yyyy.MM.dd. hh:mm");
-			chartLayout.addView(chart);
-		} else {
-			chart.repaint();
-		}
+		};
+		
 	}
+	
+	private void setInfobar(String infoBarString) {
+		final TextView infobarTextView = (TextView) findViewById(R.infobar.textview);
+		infobarTextView.setText(infoBarString);
+		infobarTextView.setSelected(true);
+	}
+	
 
-	private void getPapersFromServer() {
+	private void setPaperNameHandler() {
+		
 		paperNames = new String[] { "", "" };
 
 		paperNameHandler = new Handler() {
@@ -252,9 +257,8 @@ public class Main extends Activity {
 				Main.this.setPaperNames(paperNamesArray);
 			}
 		};
-
-		// progressDialog = ProgressDialog.show(Main.this, "", "Doing...");
-		new GetPaperNameThread(paperNameHandler);
+		
+		
 	}
 
 	public void setPaperNames(String[] paperNames) {
@@ -263,53 +267,130 @@ public class Main extends Activity {
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.selector_autocomplete_list_item, paperNames);
 		selectorAutoCompleteView.setAdapter(adapter);
 	}
-
-	private void getInfobar() {
-		getInfobarHandler = new Handler() {
-
-			StringBuilder infoBarStringBuilder = new StringBuilder();
+	
+	
+	private void setStockDataHandler() {
+		
+		final SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd" + " " + "HH:mm:ss");
+		stockDataHandler = new Handler() {
 
 			@Override
 			public void handleMessage(Message msg) {
 
 				super.handleMessage(msg);
 				if (msg.what == 0) {
-					// igy kell hozzaadni adatot
-					infoBarStringBuilder.append(msg.getData().getString("paperName") + " " + msg.getData().getString("price") + " | ");
+					try {
+						
+						Date tmpDate = dateTimeFormat.parse(msg.getData().getString("date") + " " + msg.getData().getString("time"));
+						// igy kell hozzaadni adatot
+						double tmpprice = Double.parseDouble(msg.getData().getString("price"));
+						double tmpvolume = Integer.parseInt(msg.getData().getString("volume")) / 10000;
+						currentPriceSeries.add(tmpDate, tmpprice);
+						currentVolumeSeries.add(tmpDate, tmpvolume);
+
+					} catch (NumberFormatException e) {
+						e.printStackTrace();
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
+					chart.repaint();
 				}
 				if (msg.what == 1) {
-					// progressDialog.dismiss();
-					sendInfoBarString();
+					progressDialog.dismiss();
+				}
+				if (msg.what == 2)
+				{
+					//TODO ha nincs kapcsolat
 				}
 			}
-
-			public void sendInfoBarString() {
-				Main.this.setInfobar(infoBarStringBuilder.toString());
-			}
-
 		};
+		
+		
+		
+	}
 
-		// progressDialog = ProgressDialog.show(Main.this, "", "Doing...");
+	@Override
+	protected void onResume() {
+		super.onResume();
+		if (chart == null) {
+			renderer = new XYMultipleSeriesRenderer();
+			setupRenderer(renderer);
 
-		Vector<String> favPaperNames = new Vector<String>();
+			final LinearLayout chartLayout = (LinearLayout) findViewById(R.main.chart);
 
+			final StockChart demo = new StockChart();
+
+			
+
+			//SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+
+			dataset = new XYMultipleSeriesDataset();
+			TimeSeries priceSeries = new TimeSeries(demo.priceChart.paperName);
+			TimeSeries volumeSeries = new TimeSeries(demo.volumeChart.paperName);
+			dataset.addSeries(priceSeries);
+			dataset.addSeries(volumeSeries);
+			currentPriceSeries = priceSeries;
+			currentVolumeSeries = volumeSeries;
+
+			
+			
+			setStockDataHandler();
+			getPaperName();
+			getFromDate();
+		
+			progressDialog = ProgressDialog.show(Main.this, "", "Loading...");
+			new GetDataThread(stockDataHandler, paperName, fromDate, fromDate, getApplicationContext());
+
+			chart = ChartFactory.getTimeChartView(this, dataset, renderer, "yyyy.MM.dd. hh:mm");
+			chartLayout.addView(chart);
+		} else {
+			chart.repaint();
+		}
+	}
+
+
+
+	
+	private void getFavPaperNames() {
+		// TODO this.favPaperNames vector feltoltese
+		
+		
+		// csak a teszt miatt
 		favPaperNames.add("OTP");
-		favPaperNames.add("Danubius");
-		favPaperNames.add("ECONET");
-		favPaperNames.add("EGIS");
-		favPaperNames.add("ELMU");
-		favPaperNames.add("PANNUNION");
-		favPaperNames.add("TVK");
+		favPaperNames.add("BUX");
 		favPaperNames.add("RABA");
-
-		new GetInfobarThread(getInfobarHandler, favPaperNames);
+		favPaperNames.add("EGIS");
+		favPaperNames.add("TVK");
+		//
+		
+		
 	}
 
-	private void setInfobar(String infoBarString) {
-		final TextView infobarTextView = (TextView) findViewById(R.infobar.textview);
-		infobarTextView.setText(infoBarString);
-		infobarTextView.setSelected(true);
+	private void getFromDate() {
+		// TODO this.fromDate Date bealitase ha meg nem lenne beallitva
+		// legyen deffault datum
+		// csak a teszt miatt
+		final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		
+		try {
+			fromDate = dateFormat.parse("2008-02-25");
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//
+		
 	}
+
+	private void getPaperName() {
+		// TODO this.paperName String ertekenek odaadasa
+		
+		//csak a tesztelesert van itt
+		this.paperName = "OTP";
+		//
+	}
+
+
 
 	private void setupRenderer(XYMultipleSeriesRenderer renderer) {
 

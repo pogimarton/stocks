@@ -13,7 +13,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-
 public class DatabaseManager {
 
 	static SQLiteDatabase db;
@@ -30,7 +29,16 @@ public class DatabaseManager {
 	public static final String priceColumnName = "price";
 	public static final String volumeColumnName = "volume";
 
-	private static final String CREATE_TABLE_StockData = "CREATE TABLE IF NOT EXISTS " + StockDataTableName + " ( " + idColumnName + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " + paperNameColumnName + " VARCHAR(32) , " + tradeDateColumnName + " DATE , " + tradeTimeColumnName + " DATETIME , " + priceColumnName + " FLOAT , " + volumeColumnName + " BIGINT " + ");";
+	private static final String CREATE_TABLE_StockData = 
+			"CREATE TABLE IF NOT EXISTS " + StockDataTableName + 
+			" ( " + 
+			idColumnName + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " + 
+			paperNameColumnName + " VARCHAR(32) , " + 
+			tradeDateColumnName + " DATE , " + 
+			tradeTimeColumnName + " DATETIME , " + 
+			priceColumnName + " FLOAT , " + 
+			volumeColumnName + " BIGINT " + 
+			");";
 
 	private class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -59,10 +67,9 @@ public class DatabaseManager {
 	}
 
 	public Cursor getStockDatabyDay(String name, StockDate stockDate) {
-		
+
 		Cursor c = db.query(StockDataTableName, null, "paperName = '" + name + "' and tradeDate = '" + stockDate.toString() + "'", null, null, null, null);
 
-		
 		return c;
 
 	}
@@ -72,7 +79,7 @@ public class DatabaseManager {
 		// "SELECT price from RawStockData where paperName = '" + paperN +
 		// "' order by tradeDate desc, tradeTime desc Limit 1"
 
-		Cursor c = db.query(StockDataTableName, null, "paperName = ? ", new String[] {paperName}, null, null, "tradeDate desc, tradeTime desc", "1");
+		Cursor c = db.query(StockDataTableName, null, "paperName = ? ", new String[] { paperName }, null, null, "tradeDate desc, tradeTime desc", "1");
 
 		return c;
 	}
@@ -82,16 +89,13 @@ public class DatabaseManager {
 		// "SELECT price from RawStockData where paperName = '" + paperN +
 		// "' order by tradeDate desc, tradeTime desc Limit 1"
 
-		Cursor c = db.query(StockDataTableName, null, "paperName = ? ", new String[] {paperName}, null, null, "tradeDate asc, tradeTime asc", "1");
+		Cursor c = db.query(StockDataTableName, null, "paperName = ? ", new String[] { paperName }, null, null, "tradeDate asc, tradeTime asc", "1");
 
-		
-		
 		return c;
 	}
 
 	public long insertStockData(String paperName, StockDate date, StockTime time, PriceAndVolume priceAndVolume) {
-		
-	
+
 		ContentValues initialValues = new ContentValues();
 
 		initialValues.put(paperNameColumnName, "'" + paperName + "'");

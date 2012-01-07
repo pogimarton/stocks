@@ -153,52 +153,11 @@ public class GetDataThread {
 	private void getData() {
 
 		// TODO handleren keresztul adatok visszakuldese
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
-
 		
-		/*
-		 * Date fromInterval = null; Date toInterval = null; try { fromInterval
-		 * = dateFormat.parse("2008-02-22"); toInterval =
-		 * dateFormat.parse("2008-02-26"); } catch (ParseException e) { // TODO
-		 * Auto-generated catch block e.printStackTrace(); }
-		 */
-
-		PriceAndVolume PAV;
-		HashMap<String, TreeMap<StockDate, TreeMap<StockTime, PriceAndVolume>>> stocks;
-
-		// stocks =
+	
 		getDataByDay(paperName, fromInterval, toInterval);
 
-		/*
-		 * for (Iterator<StockDate> itSD =
-		 * stocks.get(paperName).keySet().iterator(); itSD.hasNext();) {
-		 * StockDate dateKey = itSD.next();
-		 * 
-		 * 
-		 * 
-		 * for (Iterator<StockTime> itST =
-		 * stocks.get(paperName).get(dateKey).keySet().iterator();
-		 * itST.hasNext();) { StockTime timeKey = itST.next(); PAV =
-		 * stocks.get(paperName).get(dateKey).get(timeKey);
-		 * 
-		 * Message msgToGui = new Message();
-		 * 
-		 * 
-		 * Bundle messageData = new Bundle(); msgToGui.what = 0;
-		 * messageData.putString("paperName", paperName);
-		 * messageData.putString("date", dateKey.toString());
-		 * messageData.putString("time", timeKey.toString());
-		 * messageData.putString("price", PAV.getPrice()+"");
-		 * messageData.putString("volume", PAV.getVolume()+"");
-		 * 
-		 * msgToGui.setData(messageData); //Log.i("stockMain",
-		 * messageData.getString("1")); stockDataHandler.sendMessage(msgToGui);
-		 * 
-		 * }
-		 * 
-		 * }
-		 */
+
 	}
 
 	private void saveTradesByDates(String paperName, Vector<Date> tradeDateDates) {
