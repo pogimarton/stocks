@@ -129,6 +129,7 @@ public final class R {
         public static final int app_about=0x7f060001;
         public static final int app_name=0x7f060000;
         public static final int cancel=0x7f06000f;
+        public static final int infobar_default=0x7f060011;
         public static final int menu_all=0x7f06000b;
         public static final int menu_favorites=0x7f060006;
         public static final int menu_filters=0x7f060007;

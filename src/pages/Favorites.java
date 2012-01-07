@@ -3,6 +3,7 @@ package pages;
 import itk.ppke.stock.R;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import android.os.Bundle;
@@ -27,20 +28,16 @@ public class Favorites extends PreferenceActivity {
         category = (PreferenceCategory)findPreference("favorite_list");
 
         prefs = new ArrayList<CheckBoxPreference>();
+        String[] paperNames = getIntent().getStringArrayExtra("paperNames");
         
-        CheckBoxPreference checkBoxPreference = new CheckBoxPreference(this);
-        checkBoxPreference.setTitle("OTP bank");
-        checkBoxPreference.setSummary("az otp bank r�szv�nyei");
-        checkBoxPreference.setKey("otp");
-        checkBoxPreference.setChecked(false);
-        prefs.add(checkBoxPreference);
-        		
-        CheckBoxPreference checkBoxPreference2 = new CheckBoxPreference(this);
-        checkBoxPreference2.setTitle("RICHTER");
-        checkBoxPreference2.setSummary("gedeon b�csi a n�k b�lv�nya");
-        checkBoxPreference2.setKey("ric");
-        checkBoxPreference2.setChecked(false);
-        prefs.add(checkBoxPreference2);
+        Arrays.sort(paperNames, String.CASE_INSENSITIVE_ORDER);
+        for (String paper : paperNames) {
+            CheckBoxPreference checkBoxPreference = new CheckBoxPreference(this);
+            checkBoxPreference.setTitle(paper);
+            checkBoxPreference.setKey("paper " + paper);
+            checkBoxPreference.setChecked(false);
+            prefs.add(checkBoxPreference);
+        }
         
         for (CheckBoxPreference p : prefs) {
         	category.addPreference(p);	
