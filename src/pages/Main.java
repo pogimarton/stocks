@@ -10,6 +10,7 @@ import itk.ppke.stock.R;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Vector;
 
 import org.achartengine.ChartFactory;
 import org.achartengine.GraphicalView;
@@ -21,6 +22,7 @@ import org.achartengine.renderer.XYMultipleSeriesRenderer;
 import org.achartengine.renderer.XYSeriesRenderer;
 
 import threads.GetDataThread;
+import threads.GetInfobarThread;
 import threads.GetPaperNameThread;
 
 import chart.StockChart;
@@ -57,6 +59,7 @@ public class Main extends Activity {
 	private String[] paperNames;
 	public Handler stockDataHandler;
 	public Handler paperNameHandler;
+	public Handler getInfobarHandler;
 	
 	public TimeSeries currentPriceSeries;
 	public TimeSeries currentVolumeSeries;
@@ -81,7 +84,7 @@ public class Main extends Activity {
 
 		getPapersFromServer();
 
-	
+		getInfobar();
 
 		final TextView infobarTextView = (TextView) findViewById(R.infobar.textview);
 		infobarTextView.setText(getInfobarFormatPaperNames());
@@ -149,6 +152,8 @@ public class Main extends Activity {
 		});
 
 	}
+
+
 
 	@Override
 	protected void onResume() {
@@ -318,6 +323,78 @@ public class Main extends Activity {
 		selectorAutoCompleteView.setAdapter(adapter);
 	}
 	
+	
+	private void getInfobar() {
+		
+		
+		
+		getInfobarHandler = new Handler() {
+
+			StringBuilder infoBarStringBuilder = new StringBuilder();
+			
+			@Override
+			public void handleMessage(Message msg) {
+
+				super.handleMessage(msg);
+				if (msg.what == 0) {
+						//igy kell hozzaadni adatot
+					
+					
+					infoBarStringBuilder.append(msg.getData().getString("paperName") + " " + msg.getData().getString("price") + " | ");
+					
+					
+
+				}
+				if(msg.what == 1)
+				{
+					//progressDialog.dismiss();
+					sendInfoBarString();
+				}
+			}
+			
+			public void sendInfoBarString()
+			{
+				Main.this.setInfobar(infoBarStringBuilder.toString());
+			}
+			
+			
+		};
+		
+		
+		//progressDialog = ProgressDialog.show(Main.this, "", "Doing...");
+		
+		Vector<String> favPaperNames= new Vector<String>();
+		
+		favPaperNames.add("OTP");
+		favPaperNames.add("Danubius");
+		favPaperNames.add("ECONET");
+		favPaperNames.add("EGIS");
+		favPaperNames.add("ELMU");
+		favPaperNames.add("PANNUNION");
+		favPaperNames.add("TVK");
+		favPaperNames.add("RABA");
+
+		
+		
+		
+		GetInfobarThread getInfobarThread = new GetInfobarThread(getInfobarHandler, favPaperNames);
+		
+		
+		
+		
+		
+		
+		
+		
+	}
+	
+	
+	private void setInfobar(String infoBarString)
+	{
+		final TextView infobarTextView = (TextView) findViewById(R.infobar.textview);
+		infobarTextView.setText(infoBarString);
+		infobarTextView.setSelected(true);
+	}
 	
 	
 	private String getInfobarFormatPaperNames() {
