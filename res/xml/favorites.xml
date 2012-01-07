@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+  <PreferenceCategory
+    android:title="Select Papers"
+    android:key="favorite_list">
+    <!-- <CheckBoxPreference android:title="OTP" android:key="pref_otp" android:summary="Enable or disable data updates" android:defaultValue="false" /> -->
+  </PreferenceCategory>
+</PreferenceScreen>

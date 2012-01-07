@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+  <item
+    android:id="@+menu/all"
+    android:icon="@drawable/checkbox_checked_icon32"
+    android:title="@string/menu_all" />
+  <item
+    android:id="@+menu/none"
+    android:icon="@drawable/checkbox_unchecked_icon32"
+    android:title="@string/menu_none" />
+</menu>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+  <item
+    android:id="@+menu/favorites"
+    android:icon="@drawable/star_fav_empty_icon32"
+    android:title="@string/menu_favorites" />
+  <item
+    android:id="@+menu/settings"
+    android:icon="@drawable/cog_icon32"
+    android:title="@string/menu_settings" />
+  <item
+    android:id="@+menu/info"
+    android:icon="@drawable/info_icon32"
+    android:title="@string/menu_info" />
+  <item
+    android:id="@+menu/quit"
+    android:icon="@drawable/app_window_cross32"
+    android:title="@string/menu_quit" />
+</menu>

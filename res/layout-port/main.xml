@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical"
+  android:background="#1e1e1e"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent">
+  <include
+    layout="@layout/selector"
+    android:id="@+main/selector"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="2dp"
+    android:layout_marginBottom="6dp"
+    android:layout_marginRight="2dp" />
+  <!-- <ImageView android:layout_weight="1" android:src="@drawable/chart_sq" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_marginBottom="6dp" /> -->
+  <LinearLayout
+    android:id="@+main/chart"
+    android:orientation="horizontal"
+    android:background="#1e1e1e"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_weight="1" />
+  <include
+    layout="@layout/controls"
+    android:id="@+main/controls"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="6dp"
+    android:layout_marginRight="2dp" />
+  <include
+    layout="@layout/infobar"
+    android:id="@+main/infobar"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content" />
+</LinearLayout>
