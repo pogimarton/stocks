@@ -18,7 +18,8 @@
         </activity>
         <activity android:name="pages.Favorites" android:label="@string/title_favorites" />
         <!-- <activity android:name="pages.Filters" android:label="@string/title_filters" />  -->
-        <activity android:name="pages.Settings" />
+        <activity android:name="pages.ChartSelector" android:label="@string/title_chartselector" />
+        <activity android:name="pages.sandbox.Settings" />
         <activity android:name="pages.sandbox.ShowSettingsActivity" />
         <activity android:name="org.achartengine.GraphicalActivity" />
     </application>

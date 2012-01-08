@@ -106,7 +106,7 @@ public class GetDataThread {
 			int count1 = (int) ((toInterval.getTime() - fromInterval.getTime()) % 86399999);
 			for (int i = 0; i <= count1; i++) {
 
-				Log.e("stockMainActivity.handlStockData.ujak", dateFormat.format(fromC.getTime()));
+				//Log.e("stockMainActivity.handlStockData.ujak", dateFormat.format(fromC.getTime()));
 				tradeDate.add(fromC.getTime());
 				fromC.add(Calendar.DATE, 1);
 
@@ -114,8 +114,8 @@ public class GetDataThread {
 
 			if (oldestTradeDateDate != null && newestTradeDateDate != null) {
 
-				Log.e("stockMainActivity.handlStockData.NEW", dateFormat.format(newestTradeDateDate));
-				Log.e("stockMainActivity.handlStockData.OLD", dateFormat.format(oldestTradeDateDate));
+				//Log.e("stockMainActivity.handlStockData.NEW", dateFormat.format(newestTradeDateDate));
+				//Log.e("stockMainActivity.handlStockData.OLD", dateFormat.format(oldestTradeDateDate));
 
 				Vector<Date> downloaded = new Vector<Date>();
 
@@ -127,7 +127,7 @@ public class GetDataThread {
 				int count2 = (int) ((newestTradeDateDate.getTime() - oldestTradeDateDate.getTime()) % 86399999);
 				for (int i = 0; i <= count2; i++) {
 
-					Log.e("stockMainActivity.handlStockData.old", dateFormat.format(oldC.getTime()));
+					//Log.e("stockMainActivity.handlStockData.old", dateFormat.format(oldC.getTime()));
 					downloaded.add(oldC.getTime());
 					oldC.add(Calendar.DATE, 1);
 
@@ -142,7 +142,7 @@ public class GetDataThread {
 			for (int i = 0; i < tradeDate.size(); i++) {
 				out += dateFormat.format(tradeDate.get(i)) + " ";
 			}
-			Log.e("stockMainActivity.handlStockData.tradedate", out);
+			//Log.e("stockMainActivity.handlStockData.tradedate", out);
 			saveTradesByDates(paperName, tradeDate);
 			getData();
 
@@ -178,7 +178,7 @@ public class GetDataThread {
 			for (Iterator<Date> it = tradeDateDates.iterator(); it.hasNext();) {
 
 				tradeDateDate = it.next();
-				Log.e("saveTradesByDates", tradeDateDate.toGMTString());
+				//Log.e("saveTradesByDates", tradeDateDate.toGMTString());
 				int year = Integer.parseInt(yearFormat.format(tradeDateDate));
 				int mounth = Integer.parseInt(mounthFormat.format(tradeDateDate));
 				int day = Integer.parseInt(dayFormat.format(tradeDateDate));
@@ -228,7 +228,7 @@ public class GetDataThread {
 		stocksWithoutName = stockManager.getFromTimeTradesOfPaper(paperName, stockDate, stockTime);
 
 		stocksWithName.put(paperName, stocksWithoutName);
-		Log.e("savabytime saved data", stocksWithName.toString());
+		//Log.e("savabytime saved data", stocksWithName.toString());
 
 		databaseManager.insertStockData(stocksWithName);
 
@@ -269,13 +269,13 @@ public class GetDataThread {
 		// PriceAndVolume>>();
 		for (int i = 0; i <= count; i++) {
 
-			Log.e("stockMainActivity.getDataByDay.Day", dateFormat.format(act));
+			//Log.e("stockMainActivity.getDataByDay.Day", dateFormat.format(act));
 			c = databaseManager.getStockDatabyDay(paperName, dateToStockDate(act));
 
 			actC.add(Calendar.DATE, 1);
 			act = actC.getTime();
 
-			Log.e("stockMainActivity.getDataByDay.cursor", c.getCount() + "");
+			//Log.e("stockMainActivity.getDataByDay.cursor", c.getCount() + "");
 			if (c.moveToFirst() && c.getCount() > 0) {
 				do {
 

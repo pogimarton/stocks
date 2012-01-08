@@ -43,7 +43,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-//@SuppressWarnings("unused")
 public class Main extends Activity {
 
 	private GraphicalView chart;
@@ -58,10 +57,9 @@ public class Main extends Activity {
 	public TimeSeries currentVolumeSeries;
 
 	private ProgressDialog progressDialog;
-	
+
 	private String[] paperNames;
-	
-	
+
 	private String paperName;
 	private Date fromDate;
 	private Vector<String> favPaperNames;
@@ -69,99 +67,77 @@ public class Main extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		
+
 		favPaperNames = new Vector<String>();
-		
+
 		setContentView(R.layout.main);
 
 		// get element references
-		final ImageButton selectorPrev = (ImageButton) findViewById(R.selector.previous);
-		final ImageButton selectorNext = (ImageButton) findViewById(R.selector.next);
-		// final ImageButton selectorListAllFav = (ImageButton)
-		// findViewById(R.selector.list);
+		// final ImageButton selectorPrev = (ImageButton) findViewById(R.selector.previous);
+		// final ImageButton selectorNext = (ImageButton) findViewById(R.selector.next);
+		final ImageButton selectorListAllFav = (ImageButton) findViewById(R.selector.list);
 
-		
-		//paper names handlerenek beallitase
+		// paper names handlerenek beallitase
 		setPaperNameHandler();
-		
-		//paper names adatainak lekerese
+
+		// paper names adatainak lekerese
 		new GetPaperNameThread(paperNameHandler);
-		
-		
-		//favorit lekekerese
+
+		// favorit lekekerese
 		getFavPaperNames();
-	
-		//infobar handlerenek beallitasa
+
+		// infobar handlerenek beallitasa
 		setInfobarHandler();
-		
-		
-		
-		//infobar adatainak lekerese
+
+		// infobar adatainak lekerese
 		new GetInfobarThread(getInfobarHandler, favPaperNames);
-		
-		
-		
-		
 
 		final ImageButton controlRefresh = (ImageButton) findViewById(R.controls.refresh);
 		final ImageButton controlTimeSelect = (ImageButton) findViewById(R.controls.time_select);
 		final ImageButton controlZoomIn = (ImageButton) findViewById(R.controls.zoom_in);
 		final ImageButton controlZoomOut = (ImageButton) findViewById(R.controls.zoom_out);
-		
+
 		final TextView infobarTextView = (TextView) findViewById(R.infobar.textview);
 		infobarTextView.setText(R.string.infobar_default);
-		
-		
-		
 
-		
 		final Dialog timeSelectDialog = new Dialog(this);
 		timeSelectDialog.setContentView(R.layout.time_select_dialog);
-		timeSelectDialog.setTitle("Select day");
+		timeSelectDialog.setTitle(R.string.select_day);
 		timeSelectDialog.setCancelable(true);
-
-		selectorPrev.setOnClickListener(new OnClickListener() {
+		
+		selectorListAllFav.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				Toast.makeText(getApplicationContext(), "selectorPrev", Toast.LENGTH_SHORT).show();
-			}
-		});
-
-		selectorNext.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				Toast.makeText(getApplicationContext(), "selectorNext", Toast.LENGTH_SHORT).show();
+				Intent intent = new Intent(getApplicationContext(), ChartSelector.class);
+				startActivity(intent);
 			}
 		});
 
 		controlRefresh.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				
+
 				getPaperName();
 				getFromDate();
-				
-				progressDialog = ProgressDialog.show(Main.this, "", "Loading...");
+
+				progressDialog = ProgressDialog.show(Main.this, "", getString(R.string.loading_));
 				new GetDataThread(stockDataHandler, paperName, fromDate, fromDate, getApplicationContext());
 
-				//favorit lekekerese
+				// favorit lekekerese
 				getFavPaperNames();
-			
-				//infobar handlerenek beallitasa
+
+				// infobar handlerenek beallitasa
 				setInfobarHandler();
-				
-				
 			}
 		});
 
 		controlTimeSelect.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				timeSelectDialog.show();
-				
+
 				getPaperName();
 				getFromDate();
-				
-				progressDialog = ProgressDialog.show(Main.this, "", "Loading...");
+
+				progressDialog = ProgressDialog.show(Main.this, "", getString(R.string.loading_));
 				new GetDataThread(stockDataHandler, paperName, fromDate, fromDate, getApplicationContext());
-				
 			}
 		});
 
@@ -194,8 +170,6 @@ public class Main extends Activity {
 
 	}
 
-
-
 	private void setInfobarHandler() {
 		getInfobarHandler = new Handler() {
 
@@ -220,18 +194,17 @@ public class Main extends Activity {
 			}
 
 		};
-		
+
 	}
-	
+
 	private void setInfobar(String infoBarString) {
 		final TextView infobarTextView = (TextView) findViewById(R.infobar.textview);
 		infobarTextView.setText(infoBarString);
 		infobarTextView.setSelected(true);
 	}
-	
 
 	private void setPaperNameHandler() {
-		
+
 		paperNames = new String[] { "", "" };
 
 		paperNameHandler = new Handler() {
@@ -257,8 +230,7 @@ public class Main extends Activity {
 				Main.this.setPaperNames(paperNamesArray);
 			}
 		};
-		
-		
+
 	}
 
 	public void setPaperNames(String[] paperNames) {
@@ -267,10 +239,9 @@ public class Main extends Activity {
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.selector_autocomplete_list_item, paperNames);
 		selectorAutoCompleteView.setAdapter(adapter);
 	}
-	
-	
+
 	private void setStockDataHandler() {
-		
+
 		final SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd" + " " + "HH:mm:ss");
 		stockDataHandler = new Handler() {
 
@@ -280,7 +251,7 @@ public class Main extends Activity {
 				super.handleMessage(msg);
 				if (msg.what == 0) {
 					try {
-						
+
 						Date tmpDate = dateTimeFormat.parse(msg.getData().getString("date") + " " + msg.getData().getString("time"));
 						// igy kell hozzaadni adatot
 						double tmpprice = Double.parseDouble(msg.getData().getString("price"));
@@ -298,15 +269,12 @@ public class Main extends Activity {
 				if (msg.what == 1) {
 					progressDialog.dismiss();
 				}
-				if (msg.what == 2)
-				{
-					//TODO ha nincs kapcsolat
+				if (msg.what == 2) {
+					// TODO ha nincs kapcsolat
 				}
 			}
 		};
-		
-		
-		
+
 	}
 
 	@Override
@@ -320,9 +288,7 @@ public class Main extends Activity {
 
 			final StockChart demo = new StockChart();
 
-			
-
-			//SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+			// SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
 
 			dataset = new XYMultipleSeriesDataset();
 			TimeSeries priceSeries = new TimeSeries(demo.priceChart.paperName);
@@ -332,13 +298,11 @@ public class Main extends Activity {
 			currentPriceSeries = priceSeries;
 			currentVolumeSeries = volumeSeries;
 
-			
-			
 			setStockDataHandler();
 			getPaperName();
 			getFromDate();
-		
-			progressDialog = ProgressDialog.show(Main.this, "", "Loading...");
+
+			progressDialog = ProgressDialog.show(Main.this, "", getString(R.string.loading_));
 			new GetDataThread(stockDataHandler, paperName, fromDate, fromDate, getApplicationContext());
 
 			chart = ChartFactory.getTimeChartView(this, dataset, renderer, "yyyy.MM.dd. hh:mm");
@@ -348,22 +312,15 @@ public class Main extends Activity {
 		}
 	}
 
-
-
-	
 	private void getFavPaperNames() {
 		// TODO this.favPaperNames vector feltoltese
-		
-		
+
 		// csak a teszt miatt
 		favPaperNames.add("OTP");
 		favPaperNames.add("BUX");
 		favPaperNames.add("RABA");
 		favPaperNames.add("EGIS");
 		favPaperNames.add("TVK");
-		//
-		
-		
 	}
 
 	private void getFromDate() {
@@ -371,26 +328,20 @@ public class Main extends Activity {
 		// legyen deffault datum
 		// csak a teszt miatt
 		final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		
+
 		try {
 			fromDate = dateFormat.parse("2008-02-25");
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		//
-		
 	}
 
 	private void getPaperName() {
 		// TODO this.paperName String ertekenek odaadasa
-		
-		//csak a tesztelesert van itt
+
+		// csak a tesztelesert van itt
 		this.paperName = "OTP";
-		//
 	}
-
-
 
 	private void setupRenderer(XYMultipleSeriesRenderer renderer) {
 
@@ -462,17 +413,9 @@ public class Main extends Activity {
 			intent.putExtra("paperNames", paperNames);
 			startActivity(intent);
 			return true;
-			// case R.menu.filters:
-			// startActivity(new Intent(getApplicationContext(),
-			// Filters.class));
-			// return true;
 		case R.menu.info:
 			Toast.makeText(getApplicationContext(), R.string.app_about, Toast.LENGTH_LONG).show();
 			return true;
-			// case R.menu.settings:
-			// startActivity(new Intent(getApplicationContext(),
-			// Settings.class));
-			// return true;
 		case R.menu.quit:
 			intent = new Intent(Intent.ACTION_MAIN);
 			intent.addCategory(Intent.CATEGORY_HOME);

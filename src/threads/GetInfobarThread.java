@@ -43,7 +43,7 @@ public class GetInfobarThread {
 				messageData.putString("price", infoBar.get(tmpPaperName).toString());
 
 				msgToGui.setData(messageData);
-				Log.e("KKKKKKKKKKKKKKKKKKKK", messageData.getString("paperName")+"  "+messageData.getString("price"));
+				//Log.e("KKKKKKKKKKKKKKKKKKKK", messageData.getString("paperName")+"  "+messageData.getString("price"));
 				getInfobarHandler.sendMessage(msgToGui);
 			}
 

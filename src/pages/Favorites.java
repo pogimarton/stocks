@@ -34,7 +34,7 @@ public class Favorites extends PreferenceActivity {
         for (String paper : paperNames) {
             CheckBoxPreference checkBoxPreference = new CheckBoxPreference(this);
             checkBoxPreference.setTitle(paper);
-            checkBoxPreference.setKey("paper " + paper);
+            checkBoxPreference.setKey("paper:" + paper);
             checkBoxPreference.setChecked(false);
             prefs.add(checkBoxPreference);
         }
