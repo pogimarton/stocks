@@ -24,7 +24,6 @@ public class Favorites extends PreferenceActivity {
         super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.favorites);
 
-        //fetch the item where you wish to insert the CheckBoxPreference, in this case a PreferenceCategory with key "targetCategory"
         category = (PreferenceCategory)findPreference("favorite_list");
 
         prefs = new ArrayList<CheckBoxPreference>();

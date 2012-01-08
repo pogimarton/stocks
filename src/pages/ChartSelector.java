@@ -6,8 +6,11 @@ import java.util.List;
 import java.util.Map;
 
 import android.app.ListActivity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.Preference;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.AdapterView;
@@ -20,7 +23,7 @@ public class ChartSelector extends ListActivity {
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		List<String> values = new ArrayList<String>();
+		final List<String> favoriteList = new ArrayList<String>();
 
 		SharedPreferences prefManager = PreferenceManager.getDefaultSharedPreferences(this);
 		Map<String, ?> all = prefManager.getAll();
@@ -32,14 +35,14 @@ public class ChartSelector extends ListActivity {
 				if (key.indexOf("paper") == 0) {
 					// Log.e("shared", key);
 					String[] splits = key.split(":");
-					values.add(splits[1]);
+					favoriteList.add(splits[1]);
 				}
 			}
 		}
 		
-		Collections.sort(values);
+		Collections.sort(favoriteList);
 
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_single_choice, android.R.id.text1, values);
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_single_choice, android.R.id.text1, favoriteList);
 		setListAdapter(adapter);
 		
 		ListView listView = getListView();
@@ -48,7 +51,15 @@ public class ChartSelector extends ListActivity {
 		listView.setOnItemClickListener(new OnItemClickListener() {
 
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Toast.makeText(getApplicationContext(), "Selected item number in list: " + position, Toast.LENGTH_SHORT).show();				
+				String selectedPaper = favoriteList.get(position);
+				
+				//Toast.makeText(getApplicationContext(), "Selected: " + selectedPaper, Toast.LENGTH_SHORT).show();
+				
+				Intent intent = new Intent(getApplicationContext(), Main.class);
+				intent.putExtra("selected", selectedPaper);
+				startActivity(intent);
+				
+				finish();
 			}
 			
 		});

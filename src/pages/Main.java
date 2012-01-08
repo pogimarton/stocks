@@ -5,6 +5,7 @@ import itk.ppke.stock.R;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 import java.util.Vector;
 
 import org.achartengine.ChartFactory;
@@ -25,10 +26,12 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -132,12 +135,6 @@ public class Main extends Activity {
 		controlTimeSelect.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				timeSelectDialog.show();
-
-				getPaperName();
-				getFromDate();
-
-				progressDialog = ProgressDialog.show(Main.this, "", getString(R.string.loading_));
-				new GetDataThread(stockDataHandler, paperName, fromDate, fromDate, getApplicationContext());
 			}
 		});
 
@@ -146,6 +143,13 @@ public class Main extends Activity {
 
 		datePickerOk.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
+				getPaperName();
+				getFromDate();
+
+				progressDialog = ProgressDialog.show(Main.this, "", getString(R.string.loading_));
+				new GetDataThread(stockDataHandler, paperName, fromDate, fromDate, getApplicationContext());
+
+				
 				timeSelectDialog.hide();
 			}
 		});
@@ -280,6 +284,19 @@ public class Main extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		
+		// itt kapja el a kiválasztott chartot ha a ChartSelectorban rákattintott
+		// ha null, akkor egy default értéket kell beállítani
+		String selected = getIntent().getStringExtra("selected");
+		Toast.makeText(getApplicationContext(), "Selected: " + selected, Toast.LENGTH_SHORT).show();
+		
+		setStockDataHandler();
+		getPaperName();
+		getFromDate();
+		
+		progressDialog = ProgressDialog.show(Main.this, "", getString(R.string.loading_));
+		new GetDataThread(stockDataHandler, paperName, fromDate, fromDate, getApplicationContext());
+		
 		if (chart == null) {
 			renderer = new XYMultipleSeriesRenderer();
 			setupRenderer(renderer);
@@ -298,13 +315,6 @@ public class Main extends Activity {
 			currentPriceSeries = priceSeries;
 			currentVolumeSeries = volumeSeries;
 
-			setStockDataHandler();
-			getPaperName();
-			getFromDate();
-
-			progressDialog = ProgressDialog.show(Main.this, "", getString(R.string.loading_));
-			new GetDataThread(stockDataHandler, paperName, fromDate, fromDate, getApplicationContext());
-
 			chart = ChartFactory.getTimeChartView(this, dataset, renderer, "yyyy.MM.dd. hh:mm");
 			chartLayout.addView(chart);
 		} else {
@@ -313,14 +323,21 @@ public class Main extends Activity {
 	}
 
 	private void getFavPaperNames() {
-		// TODO this.favPaperNames vector feltoltese
+		SharedPreferences prefManager = PreferenceManager.getDefaultSharedPreferences(this);
+		Map<String, ?> all = prefManager.getAll();
 
-		// csak a teszt miatt
-		favPaperNames.add("OTP");
-		favPaperNames.add("BUX");
-		favPaperNames.add("RABA");
-		favPaperNames.add("EGIS");
-		favPaperNames.add("TVK");
+		for (String key : all.keySet()) {
+			Boolean b = (Boolean) all.get(key);
+
+			if (b) {
+				if (key.indexOf("paper") == 0) {
+					// Log.e("shared", key);
+					String[] splits = key.split(":");
+					favPaperNames.add(splits[1]);
+				}
+			}
+		}
+
 	}
 
 	private void getFromDate() {
@@ -338,9 +355,7 @@ public class Main extends Activity {
 
 	private void getPaperName() {
 		// TODO this.paperName String ertekenek odaadasa
-
-		// csak a tesztelesert van itt
-		this.paperName = "OTP";
+		this.paperName = "TVK";
 	}
 
 	private void setupRenderer(XYMultipleSeriesRenderer renderer) {
