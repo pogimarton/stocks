@@ -20,6 +20,9 @@ import android.widget.ListView;
 
 public class ChartSelector extends ListActivity {
 
+	
+	
+	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		final List<String> favoriteList = new ArrayList<String>();
@@ -72,5 +75,9 @@ public class ChartSelector extends ListActivity {
 			
 		});
 	}
+	
 
+	
+	
+	
 }

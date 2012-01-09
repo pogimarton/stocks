@@ -72,6 +72,9 @@ public class Main extends Activity {
 
 	private Dialog timeSelectDialog;
 	
+	private StockChart demo;
+	
+	
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -310,7 +313,7 @@ public class Main extends Activity {
 		super.onActivityResult(requestCode, resultCode, data);
 		
 		
-		if(data.getStringExtra("selected") != null)
+		if(resultCode == 1)
 		{
 			this.paperName = data.getStringExtra("selected");
 		Toast.makeText(getApplicationContext(), "Selected: " + paperName, Toast.LENGTH_SHORT).show();
@@ -346,19 +349,24 @@ public class Main extends Activity {
 
 			final LinearLayout chartLayout = (LinearLayout) findViewById(R.main.chart);
 
-			final StockChart demo = new StockChart();
+			demo = new StockChart();
 
 			// SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
 
 			dataset = new XYMultipleSeriesDataset();
+			//dataset.removeSeries(1);
+			//dataset.removeSeries(2);
+			
 			TimeSeries priceSeries = new TimeSeries(demo.priceChart.paperName);
 			TimeSeries volumeSeries = new TimeSeries(demo.volumeChart.paperName);
+			
+			
 			dataset.addSeries(priceSeries);
 			dataset.addSeries(volumeSeries);
 			currentPriceSeries = priceSeries;
 			currentVolumeSeries = volumeSeries;
 			
-
+			
 			chart = ChartFactory.getTimeChartView(this, dataset, renderer, "yyyy.MM.dd. hh:mm");
 			chartLayout.addView(chart);
 		} else {
@@ -388,6 +396,18 @@ public class Main extends Activity {
 		// TODO this.fromDate Date bealitase ha meg nem lenne beallitva
 		// legyen deffault datum
 				
+			if(currentPriceSeries != null)
+			{
+				Log.e("torles", "torles");
+				currentPriceSeries.clear();
+				currentVolumeSeries.clear();
+
+			}
+					
+			
+		 
+		
+		
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		DatePicker datePicker = (DatePicker) timeSelectDialog.findViewById(R.date_picker.from_date);
 		

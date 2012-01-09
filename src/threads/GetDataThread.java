@@ -21,6 +21,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 
 
 public class GetDataThread {
@@ -50,7 +51,7 @@ public class GetDataThread {
 	private Runnable stockDataSaveAndDownload = new Runnable() {
 
 		public void run() {
-
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
 
 
@@ -112,15 +113,26 @@ public class GetDataThread {
 
 				}
 
-				if (tradeDate.remove(newestTradeDateDate)) {
-					saveTradesByTime(paperName, newestTradeDateDate, newestTradeTimeDate);
+				for (int i = 0 ; i<tradeDate.size();i++)
+				{
+					Log.e("befor removing", dateFormat.format(tradeDate.get(i)));
+					if(dateFormat.format(tradeDate.get(i)).equals(dateFormat.format(newestTradeDateDate)))
+					{
+						tradeDate.remove(i);
+						saveTradesByTime(paperName, newestTradeDateDate, newestTradeTimeDate);
+					}
 				}
+				
+				
 				tradeDate.removeAll(downloaded);
 			}
 
+				
+			if(tradeDate.size()>0)
+			{
+				saveTradesByDates(paperName, tradeDate);
+			}
 			
-			
-			saveTradesByDates(paperName, tradeDate);
 			getData();
 
 		}
@@ -146,7 +158,7 @@ public class GetDataThread {
 			HashMap<String, TreeMap<StockDate, TreeMap<StockTime, PriceAndVolume>>> stocksWithName = new HashMap<String, TreeMap<StockDate, TreeMap<StockTime, PriceAndVolume>>>();
 
 			DatabaseManager databaseManager = new DatabaseManager(context);
-
+			
 			Date tradeDateDate;
 			StockDate stockDate;
 
