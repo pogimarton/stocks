@@ -18,33 +18,33 @@ public class Favorites extends PreferenceActivity {
 
 	private PreferenceCategory category;
 	private List<CheckBoxPreference> prefs;
-	
+
 	@Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.favorites);
 
-        category = (PreferenceCategory)findPreference("favorite_list");
+		category = (PreferenceCategory) findPreference("favorite_list");
 
-        prefs = new ArrayList<CheckBoxPreference>();
-        String[] paperNames = getIntent().getStringArrayExtra("paperNames");
-        
-        Arrays.sort(paperNames, String.CASE_INSENSITIVE_ORDER);
-        for (String paper : paperNames) {
-            CheckBoxPreference checkBoxPreference = new CheckBoxPreference(this);
-            checkBoxPreference.setTitle(paper);
-            checkBoxPreference.setKey("paper:" + paper);
-            checkBoxPreference.setChecked(false);
-            prefs.add(checkBoxPreference);
-        }
-        
-        for (CheckBoxPreference p : prefs) {
-        	category.addPreference(p);	
-        }
-        
-        //setContentView(R.layout.favorites);
-    }
-    
+		prefs = new ArrayList<CheckBoxPreference>();
+		String[] paperNames = getIntent().getStringArrayExtra("paperNames");
+
+		Arrays.sort(paperNames, String.CASE_INSENSITIVE_ORDER);
+		for (String paper : paperNames) {
+			CheckBoxPreference checkBoxPreference = new CheckBoxPreference(this);
+			checkBoxPreference.setTitle(paper);
+			checkBoxPreference.setKey("paper:" + paper);
+			checkBoxPreference.setChecked(false);
+			prefs.add(checkBoxPreference);
+		}
+
+		for (CheckBoxPreference p : prefs) {
+			category.addPreference(p);
+		}
+
+		// setContentView(R.layout.favorites);
+	}
+
 	// menu
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

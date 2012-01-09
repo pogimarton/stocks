@@ -9,11 +9,10 @@ public class StockChart {
 
 	public StockChart() {
 		priceChart = null;
-		volumeChart = null; 
+		volumeChart = null;
 		setDemoData();
 	}
 
-	
 	public StockChart(ChartData c1, ChartData c2) {
 		this.priceChart = c1;
 		this.volumeChart = c2;
@@ -27,17 +26,18 @@ public class StockChart {
 		priceChart = new ChartData(xdata, ydata, "OTP 1");
 		volumeChart = new ChartData(xdata, ydata2, "OTP 2");
 	}
-	
+
 	public void append(Date tradeDate, double price, int volume) {
-			priceChart.append(tradeDate, price);
-			volumeChart.append(tradeDate, volume);
+		priceChart.append(tradeDate, price);
+		volumeChart.append(tradeDate, volume);
 	}
 
-	/*public XYMultipleSeriesDataset generateDatasetFromCharts() {
-		XYMultipleSeriesDataset dataset = new XYMultipleSeriesDataset();
-		dataset.addSeries(priceChart.getTimeSeries(priceChart.paperName));
-		dataset.addSeries(volumeChart.getTimeSeries(volumeChart.paperName));
-		return dataset;
-	}*/
+	/*
+	 * public XYMultipleSeriesDataset generateDatasetFromCharts() {
+	 * XYMultipleSeriesDataset dataset = new XYMultipleSeriesDataset();
+	 * dataset.addSeries(priceChart.getTimeSeries(priceChart.paperName));
+	 * dataset.addSeries(volumeChart.getTimeSeries(volumeChart.paperName));
+	 * return dataset; }
+	 */
 
 }

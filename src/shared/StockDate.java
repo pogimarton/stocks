@@ -7,7 +7,7 @@ public final class StockDate implements Comparable<StockDate>, Serializable {
 	private final int year;
 	private final int month;
 	private final int day;
-	
+
 	public StockDate(int year, int month, int day) {
 		this.year = year;
 		this.month = month;
@@ -56,43 +56,36 @@ public final class StockDate implements Comparable<StockDate>, Serializable {
 
 	@Override
 	public String toString() {
-		String y=getYear()+"";
+		String y = getYear() + "";
 		String m;
 		String d;
-		if(getMonth()<10)
-		{
-			m="0"+getMonth();
+		if (getMonth() < 10) {
+			m = "0" + getMonth();
+		} else {
+			m = getMonth() + "";
 		}
-		else
-		{
-			m=getMonth()+"";
+		if (getDay() < 10) {
+			d = "0" + getDay();
+		} else {
+			d = getDay() + "";
 		}
-		if(getDay()<10)
-		{
-			d="0"+getDay();
-		}
-		else
-		{
-			d=getDay()+"";
-		}
-		return ""+y+"-"+m+"-"+d+"";
+		return "" + y + "-" + m + "-" + d + "";
 	}
 
 	public int compareTo(StockDate o) {
 		if (this == o)
 			return 0;
 		if (o == null)
-			throw new ClassCastException ();
-		
-		
+			throw new ClassCastException();
+
 		int diff = year - o.year;
 		if (diff != 0)
 			return diff;
-		
+
 		diff = month - o.month;
 		if (diff != 0)
 			return diff;
-		
+
 		diff = day - o.day;
 		return diff;
 	}

@@ -23,7 +23,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-
 public class GetDataThread {
 
 	Handler stockDataHandler;
@@ -31,10 +30,8 @@ public class GetDataThread {
 	Date toInterval;
 	Context context;
 	String paperName;
-	
-	
-	public GetDataThread(Handler stockDataHandler, String paperName,Date fromInterval, Date toInterval, Context context) {
-		
+
+	public GetDataThread(Handler stockDataHandler, String paperName, Date fromInterval, Date toInterval, Context context) {
 
 		this.stockDataHandler = stockDataHandler;
 		this.fromInterval = fromInterval;
@@ -53,11 +50,6 @@ public class GetDataThread {
 		public void run() {
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-
-
-
-
-
 			Date[] newestTrade = getNewestData(paperName);
 			Date newestTradeDateDate = null;
 			Date newestTradeTimeDate = null;
@@ -70,11 +62,10 @@ public class GetDataThread {
 			Date[] oldestTrade = getOldestData(paperName);
 
 			Date oldestTradeDateDate = null;
-			
 
 			if (oldestTrade != null) {
 				oldestTradeDateDate = oldestTrade[0];
-				
+
 			}
 
 			Calendar fromC = Calendar.getInstance();
@@ -87,15 +78,12 @@ public class GetDataThread {
 			int count1 = (int) ((toInterval.getTime() - fromInterval.getTime()) % 86399999);
 			for (int i = 0; i <= count1; i++) {
 
-				
 				tradeDate.add(fromC.getTime());
 				fromC.add(Calendar.DATE, 1);
 
 			}
 
 			if (oldestTradeDateDate != null && newestTradeDateDate != null) {
-
-				
 
 				Vector<Date> downloaded = new Vector<Date>();
 
@@ -107,32 +95,26 @@ public class GetDataThread {
 				int count2 = (int) ((newestTradeDateDate.getTime() - oldestTradeDateDate.getTime()) % 86399999);
 				for (int i = 0; i <= count2; i++) {
 
-				
 					downloaded.add(oldC.getTime());
 					oldC.add(Calendar.DATE, 1);
 
 				}
 
-				for (int i = 0 ; i<tradeDate.size();i++)
-				{
+				for (int i = 0; i < tradeDate.size(); i++) {
 					Log.e("befor removing", dateFormat.format(tradeDate.get(i)));
-					if(dateFormat.format(tradeDate.get(i)).equals(dateFormat.format(newestTradeDateDate)))
-					{
+					if (dateFormat.format(tradeDate.get(i)).equals(dateFormat.format(newestTradeDateDate))) {
 						tradeDate.remove(i);
 						saveTradesByTime(paperName, newestTradeDateDate, newestTradeTimeDate);
 					}
 				}
-				
-				
+
 				tradeDate.removeAll(downloaded);
 			}
 
-				
-			if(tradeDate.size()>0)
-			{
+			if (tradeDate.size() > 0) {
 				saveTradesByDates(paperName, tradeDate);
 			}
-			
+
 			getData();
 
 		}
@@ -141,9 +123,7 @@ public class GetDataThread {
 
 	private void getData() {
 
-		
 		getDataByDay(paperName, fromInterval, toInterval);
-
 
 	}
 
@@ -158,14 +138,14 @@ public class GetDataThread {
 			HashMap<String, TreeMap<StockDate, TreeMap<StockTime, PriceAndVolume>>> stocksWithName = new HashMap<String, TreeMap<StockDate, TreeMap<StockTime, PriceAndVolume>>>();
 
 			DatabaseManager databaseManager = new DatabaseManager(context);
-			
+
 			Date tradeDateDate;
 			StockDate stockDate;
 
 			for (Iterator<Date> it = tradeDateDates.iterator(); it.hasNext();) {
 
 				tradeDateDate = it.next();
-		
+
 				int year = Integer.parseInt(yearFormat.format(tradeDateDate));
 				int mounth = Integer.parseInt(mounthFormat.format(tradeDateDate));
 				int day = Integer.parseInt(dayFormat.format(tradeDateDate));
@@ -177,7 +157,7 @@ public class GetDataThread {
 					stocksWithoutName = stockManager.getDayTradesOfPaper(paperName, stockDate);
 
 					stocksWithName.put(paperName, stocksWithoutName);
-		
+
 					databaseManager.insertStockData(stocksWithName);
 				} catch (UnknownHostException e) {
 					Message msgToGui = new Message();
@@ -187,9 +167,9 @@ public class GetDataThread {
 					messageData.putString("error", "No connection");
 
 					msgToGui.setData(messageData);
-					
+
 					stockDataHandler.sendMessage(msgToGui);
-					
+
 				} catch (IOException e) {
 					Message msgToGui = new Message();
 
@@ -198,10 +178,9 @@ public class GetDataThread {
 					messageData.putString("error", "No connection");
 
 					msgToGui.setData(messageData);
-					
+
 					stockDataHandler.sendMessage(msgToGui);
 				}
-
 
 			}
 
@@ -238,19 +217,14 @@ public class GetDataThread {
 		StockTime stockTime = new StockTime(hour, minute, second);
 		StockManager stockManager;
 		try {
-			
+
 			stockManager = new StockManager();
 			stocksWithoutName = stockManager.getFromTimeTradesOfPaper(paperName, stockDate, stockTime);
 
 			stocksWithName.put(paperName, stocksWithoutName);
-		
 
 			databaseManager.insertStockData(stocksWithName);
 
-			
-			
-			
-			
 		} catch (UnknownHostException e) {
 			Message msgToGui = new Message();
 
@@ -259,7 +233,7 @@ public class GetDataThread {
 			messageData.putString("error", "No connection");
 
 			msgToGui.setData(messageData);
-			
+
 			stockDataHandler.sendMessage(msgToGui);
 		} catch (IOException e) {
 			Message msgToGui = new Message();
@@ -269,21 +243,16 @@ public class GetDataThread {
 			messageData.putString("error", "No connection");
 
 			msgToGui.setData(messageData);
-			
+
 			stockDataHandler.sendMessage(msgToGui);
 		}
 		databaseManager.close();
 	}
 
-	
 	private void getDataByDay(String paperName, Date fromInterval, Date toInterval) {
 		DatabaseManager databaseManager = new DatabaseManager(context);
 
-
 		Date act = fromInterval;
-
-
-
 
 		Cursor c;
 		Calendar actC = Calendar.getInstance();
@@ -295,12 +264,10 @@ public class GetDataThread {
 
 		for (int i = 0; i <= count; i++) {
 
-
 			c = databaseManager.getStockDatabyDay(paperName, dateToStockDate(act));
 
 			actC.add(Calendar.DATE, 1);
 			act = actC.getTime();
-
 
 			if (c.moveToFirst() && c.getCount() > 0) {
 				do {
@@ -319,21 +286,17 @@ public class GetDataThread {
 
 					stockDataHandler.sendMessage(msgToGui);
 
-
 				} while (c.moveToNext());
 				Message msgToGui = new Message();
 
 				Bundle messageData = new Bundle();
 				msgToGui.what = 1;
 
-
 				msgToGui.setData(messageData);
 				// Log.i("stockMain", messageData.getString("1"));
 				stockDataHandler.sendMessage(msgToGui);
 
-			}
-			else
-			{
+			} else {
 				Message msgToGui = new Message();
 
 				Bundle messageData = new Bundle();
@@ -341,7 +304,7 @@ public class GetDataThread {
 				messageData.putString("error", "No Data");
 
 				msgToGui.setData(messageData);
-				
+
 				stockDataHandler.sendMessage(msgToGui);
 			}
 
@@ -389,7 +352,6 @@ public class GetDataThread {
 
 		Cursor c = databaseManager.getOldestData(paperName);
 
-
 		Date res[] = null;
 		if (c.moveToFirst()) {
 
@@ -436,7 +398,5 @@ public class GetDataThread {
 		return stockDate;
 
 	}
-
-
 
 }

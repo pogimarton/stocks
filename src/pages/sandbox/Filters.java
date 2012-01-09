@@ -12,13 +12,13 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 public class Filters extends Activity {
-    /** Called when the activity is first created. */
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        //setContentView(R.layout.filters);
-    }
-    
+	/** Called when the activity is first created. */
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		// setContentView(R.layout.filters);
+	}
+
 	// menu
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

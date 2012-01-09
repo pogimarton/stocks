@@ -9,24 +9,17 @@ public class LastPapernameAndPrice implements Serializable {
 
 	private Vector<String> favPaperNames;
 
-	
 	public LastPapernameAndPrice(Vector<String> favPaperNames) {
 		this.favPaperNames = favPaperNames;
 
 	}
 
-
 	public Vector<String> getFavPaperNames() {
 		return favPaperNames;
 	}
 
-
 	public void setFavPaperNames(Vector<String> favPaperNames) {
 		this.favPaperNames = favPaperNames;
 	}
-
-
-
-
 
 }

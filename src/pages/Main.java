@@ -71,11 +71,9 @@ public class Main extends Activity {
 	private Vector<String> favPaperNames;
 
 	private Dialog timeSelectDialog;
-	
+
 	private StockChart demo;
-	
-	
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -85,8 +83,10 @@ public class Main extends Activity {
 		setContentView(R.layout.main);
 
 		// get element references
-		// final ImageButton selectorPrev = (ImageButton) findViewById(R.selector.previous);
-		// final ImageButton selectorNext = (ImageButton) findViewById(R.selector.next);
+		// final ImageButton selectorPrev = (ImageButton)
+		// findViewById(R.selector.previous);
+		// final ImageButton selectorNext = (ImageButton)
+		// findViewById(R.selector.next);
 		final ImageButton selectorListAllFav = (ImageButton) findViewById(R.selector.list);
 
 		// paper names handlerenek beallitase
@@ -116,11 +116,11 @@ public class Main extends Activity {
 		timeSelectDialog.setContentView(R.layout.time_select_dialog);
 		timeSelectDialog.setTitle(R.string.select_day);
 		timeSelectDialog.setCancelable(true);
-		
+
 		selectorListAllFav.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				Intent intent = new Intent(getApplicationContext(), ChartSelector.class);
-				startActivityForResult(intent,1);
+				startActivityForResult(intent, 1);
 			}
 		});
 
@@ -158,7 +158,6 @@ public class Main extends Activity {
 				progressDialog = ProgressDialog.show(Main.this, "", getString(R.string.loading_));
 				new GetDataThread(stockDataHandler, paperName, fromDate, fromDate, getApplicationContext());
 
-				
 				timeSelectDialog.hide();
 			}
 		});
@@ -201,7 +200,7 @@ public class Main extends Activity {
 					sendInfoBarString();
 				}
 				if (msg.what == 2) {
-					// TODO nincs kapcsoalt, nincs adat, 
+					// TODO nincs kapcsoalt, nincs adat,
 					Toast.makeText(getApplicationContext(), msg.getData().getString("error"), Toast.LENGTH_SHORT).show();
 				}
 			}
@@ -241,7 +240,7 @@ public class Main extends Activity {
 					sendPaperNames();
 				}
 				if (msg.what == 2) {
-					// TODO nincs kapcsoalt, nincs adat, 
+					// TODO nincs kapcsoalt, nincs adat,
 					Toast.makeText(getApplicationContext(), msg.getData().getString("error"), Toast.LENGTH_SHORT).show();
 				}
 			}
@@ -288,12 +287,12 @@ public class Main extends Activity {
 					chart.repaint();
 				}
 				if (msg.what == 1) {
-					
-						progressDialog.dismiss();
-					
+
+					progressDialog.dismiss();
+
 				}
 				if (msg.what == 2) {
-					// TODO nincs kapcsoalt, nincs adat, 
+					// TODO nincs kapcsoalt, nincs adat,
 					progressDialog.dismiss();
 					Toast.makeText(getApplicationContext(), msg.getData().getString("error"), Toast.LENGTH_SHORT).show();
 				}
@@ -302,46 +301,37 @@ public class Main extends Activity {
 
 	}
 
-	
-	
-	
-	
-	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		
+
 		super.onActivityResult(requestCode, resultCode, data);
-		
-		
-		if(resultCode == 1)
-		{
+
+		if (resultCode == 1) {
 			this.paperName = data.getStringExtra("selected");
-		Toast.makeText(getApplicationContext(), "Selected: " + paperName, Toast.LENGTH_SHORT).show();
-		final AutoCompleteTextView selectorAutoCompleteView = (AutoCompleteTextView) findViewById(R.selector.autocomplete);
-		selectorAutoCompleteView.setText(this.paperName);
+			Toast.makeText(getApplicationContext(), "Selected: " + paperName, Toast.LENGTH_SHORT).show();
+			final AutoCompleteTextView selectorAutoCompleteView = (AutoCompleteTextView) findViewById(R.selector.autocomplete);
+			selectorAutoCompleteView.setText(this.paperName);
 		}
-		
+
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		
-		// itt kapja el a kiv�lasztott chartot ha a ChartSelectorban r�kattintott
+
+		// itt kapja el a kiv�lasztott chartot ha a ChartSelectorban
+		// r�kattintott
 		// ha null, akkor egy default �rt�ket kell be�ll�tani
-		
 
 		setStockDataHandler();
 		getPaperName();
 		getFromDate();
-		
-		
-		if(paperName != null && !paperName.equals(""))
-		{
+
+		if (paperName != null && !paperName.equals("")) {
 			progressDialog = ProgressDialog.show(Main.this, "", getString(R.string.loading_));
-			
+
 			new GetDataThread(stockDataHandler, paperName, fromDate, fromDate, getApplicationContext());
-			
+
 		}
 		if (chart == null) {
 			renderer = new XYMultipleSeriesRenderer();
@@ -354,19 +344,17 @@ public class Main extends Activity {
 			// SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
 
 			dataset = new XYMultipleSeriesDataset();
-			//dataset.removeSeries(1);
-			//dataset.removeSeries(2);
-			
+			// dataset.removeSeries(1);
+			// dataset.removeSeries(2);
+
 			TimeSeries priceSeries = new TimeSeries(demo.priceChart.paperName);
 			TimeSeries volumeSeries = new TimeSeries(demo.volumeChart.paperName);
-			
-			
+
 			dataset.addSeries(priceSeries);
 			dataset.addSeries(volumeSeries);
 			currentPriceSeries = priceSeries;
 			currentVolumeSeries = volumeSeries;
-			
-			
+
 			chart = ChartFactory.getTimeChartView(this, dataset, renderer, "yyyy.MM.dd. hh:mm");
 			chartLayout.addView(chart);
 		} else {
@@ -395,49 +383,42 @@ public class Main extends Activity {
 	private void getFromDate() {
 		// TODO this.fromDate Date bealitase ha meg nem lenne beallitva
 		// legyen deffault datum
-				
-			if(currentPriceSeries != null)
-			{
-				Log.e("torles", "torles");
-				currentPriceSeries.clear();
-				currentVolumeSeries.clear();
 
-			}
-					
-			
-		 
-		
-		
+		if (currentPriceSeries != null) {
+			Log.e("torles", "torles");
+			currentPriceSeries.clear();
+			currentVolumeSeries.clear();
+
+		}
+
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		DatePicker datePicker = (DatePicker) timeSelectDialog.findViewById(R.date_picker.from_date);
-		
+
 		fromDate = new Date();
-		
-		Log.e("year",""+datePicker.getYear());
-		Log.e("month",""+datePicker.getMonth());
-		Log.e("day",""+datePicker.getDayOfMonth());
-		
+
+		Log.e("year", "" + datePicker.getYear());
+		Log.e("month", "" + datePicker.getMonth());
+		Log.e("day", "" + datePicker.getDayOfMonth());
+
 		int year = datePicker.getYear();
 		int month = datePicker.getMonth();
 		int day = datePicker.getDayOfMonth();
 		Calendar calendar = Calendar.getInstance();
 		calendar.set(year, month, day);
-		
-		
-		
+
 		fromDate = calendar.getTime();
-		
+
 		Log.e("data", dateFormat.format(fromDate));
-		
+
 	}
 
 	private void getPaperName() {
 		// TODO this.paperName String ertekenek odaadasa
-		
+
 		final AutoCompleteTextView selectorAutoCompleteView = (AutoCompleteTextView) findViewById(R.selector.autocomplete);
 
 		this.paperName = selectorAutoCompleteView.getText().toString();
-		
+
 	}
 
 	private void setupRenderer(XYMultipleSeriesRenderer renderer) {

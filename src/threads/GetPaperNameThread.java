@@ -10,12 +10,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 
-
 public class GetPaperNameThread {
 	private Handler paperNameHandler;
 
 	public GetPaperNameThread(Handler paperNameHandler) {
-		
+
 		this.paperNameHandler = paperNameHandler;
 
 		Thread thread = new Thread(null, getPaperName, "getPaperThread");
@@ -28,11 +27,11 @@ public class GetPaperNameThread {
 	private Runnable getPaperName = new Runnable() {
 
 		public void run() {
-			
-			StockManager stockManager;			
-			
+
+			StockManager stockManager;
+
 			try {
-				
+
 				stockManager = new StockManager();
 				Vector<String> paperNames = stockManager.getAllPaperNames();
 				for (Iterator<String> it = paperNames.iterator(); it.hasNext();) {
@@ -42,7 +41,8 @@ public class GetPaperNameThread {
 					messageData.putString("paperName", it.next());
 
 					msgToGui.setData(messageData);
-					//Log.e("KKKKKKKKKKKKKKKKKKKK", messageData.getString("paperName"));
+					// Log.e("KKKKKKKKKKKKKKKKKKKK",
+					// messageData.getString("paperName"));
 					paperNameHandler.sendMessage(msgToGui);
 				}
 
@@ -53,7 +53,7 @@ public class GetPaperNameThread {
 				msgToGui.setData(messageData);
 
 				paperNameHandler.sendMessage(msgToGui);
-				
+
 			} catch (UnknownHostException e) {
 				Message msgToGui = new Message();
 
@@ -62,7 +62,7 @@ public class GetPaperNameThread {
 				messageData.putString("error", "No connection");
 
 				msgToGui.setData(messageData);
-				
+
 				paperNameHandler.sendMessage(msgToGui);
 			} catch (IOException e) {
 				Message msgToGui = new Message();
@@ -72,12 +72,9 @@ public class GetPaperNameThread {
 				messageData.putString("error", "No connection");
 
 				msgToGui.setData(messageData);
-				
+
 				paperNameHandler.sendMessage(msgToGui);
 			}
-			
-
-
 
 		}
 

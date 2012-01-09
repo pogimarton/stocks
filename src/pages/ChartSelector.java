@@ -17,12 +17,8 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-
 public class ChartSelector extends ListActivity {
 
-	
-	
-	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		final List<String> favoriteList = new ArrayList<String>();
@@ -41,43 +37,36 @@ public class ChartSelector extends ListActivity {
 				}
 			}
 		}
-		
+
 		Collections.sort(favoriteList);
 
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_single_choice, android.R.id.text1, favoriteList);
 		setListAdapter(adapter);
-		
+
 		ListView listView = getListView();
 		listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-		
+
 		listView.setOnItemClickListener(new OnItemClickListener() {
 
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				String selectedPaper = favoriteList.get(position);
-				
-				//Toast.makeText(getApplicationContext(), "Selected: " + selectedPaper, Toast.LENGTH_SHORT).show();
-				
-				
+
+				// Toast.makeText(getApplicationContext(), "Selected: " +
+				// selectedPaper, Toast.LENGTH_SHORT).show();
+
 				Intent in = new Intent();
-				if(selectedPaper !=null)
-				{
-			    
-				in.putExtra("selected", selectedPaper);
-				
-				}
-				else
-				{
+				if (selectedPaper != null) {
+
+					in.putExtra("selected", selectedPaper);
+
+				} else {
 					in.putExtra("selected", "");
 				}
-				setResult(1,in);
+				setResult(1, in);
 				finish();
 			}
-			
+
 		});
 	}
-	
 
-	
-	
-	
 }

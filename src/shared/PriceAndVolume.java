@@ -4,11 +4,9 @@ import java.io.Serializable;
 
 public class PriceAndVolume implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private double	Price	= 0;
-	private int		volume	= 0;
-	
-	
-	
+	private double Price = 0;
+	private int volume = 0;
+
 	public PriceAndVolume() {
 	}
 
@@ -24,7 +22,7 @@ public class PriceAndVolume implements Serializable {
 	public int getVolume() {
 		return volume;
 	}
-	
+
 	public void setPrice(double Price) {
 		this.Price = Price;
 	}

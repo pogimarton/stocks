@@ -7,7 +7,6 @@ import android.preference.PreferenceActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-
 public class Settings extends PreferenceActivity {
 
 	@Override
@@ -27,7 +26,7 @@ public class Settings extends PreferenceActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case 0:
-			//startActivity(new Intent(this, ShowSettingsActivity.class));
+			// startActivity(new Intent(this, ShowSettingsActivity.class));
 			return true;
 		}
 		return false;
