@@ -247,7 +247,7 @@ public class GetDataThread {
 
 			databaseManager.insertStockData(stocksWithName);
 
-			databaseManager.close();
+			
 			
 			
 			
@@ -272,7 +272,7 @@ public class GetDataThread {
 			
 			stockDataHandler.sendMessage(msgToGui);
 		}
-		
+		databaseManager.close();
 	}
 
 	

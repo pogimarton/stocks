@@ -137,7 +137,7 @@ public class Main extends Activity {
 				getFavPaperNames();
 
 				// infobar handlerenek beallitasa
-				setInfobarHandler();
+				new GetInfobarThread(getInfobarHandler, favPaperNames);
 			}
 		});
 
@@ -377,7 +377,7 @@ public class Main extends Activity {
 	private void getFavPaperNames() {
 		SharedPreferences prefManager = PreferenceManager.getDefaultSharedPreferences(this);
 		Map<String, ?> all = prefManager.getAll();
-
+		favPaperNames = new Vector<String>();
 		for (String key : all.keySet()) {
 			Boolean b = (Boolean) all.get(key);
 
@@ -417,9 +417,9 @@ public class Main extends Activity {
 		Log.e("month",""+datePicker.getMonth());
 		Log.e("day",""+datePicker.getDayOfMonth());
 		
-		int year = 2008;
-		int month = 01;
-		int day = 25;
+		int year = datePicker.getYear();
+		int month = datePicker.getMonth();
+		int day = datePicker.getDayOfMonth();
 		Calendar calendar = Calendar.getInstance();
 		calendar.set(year, month, day);
 		
