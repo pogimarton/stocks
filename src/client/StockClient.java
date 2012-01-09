@@ -3,7 +3,6 @@ package client;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
@@ -22,18 +21,11 @@ public class StockClient {
 	
 	
 	
-	
-	public StockClient() {
+	public StockClient() throws UnknownHostException, IOException {
 		super();
-		try {
+
 			this.socket = new Socket (host, port);
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
 		this.oos = null;
 		this.ois = null;
 	}
@@ -44,6 +36,7 @@ public class StockClient {
 
 
 
+	@SuppressWarnings("rawtypes")
 	public StockServerResponse processRequest (StockClientRequest request) {
 		StockServerResponse response = null;
 		try {

@@ -9,15 +9,14 @@ import android.app.ListActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.Preference;
-import android.preference.PreferenceCategory;
+
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
+
 
 public class ChartSelector extends ListActivity {
 
@@ -55,10 +54,19 @@ public class ChartSelector extends ListActivity {
 				
 				//Toast.makeText(getApplicationContext(), "Selected: " + selectedPaper, Toast.LENGTH_SHORT).show();
 				
-				Intent intent = new Intent(getApplicationContext(), Main.class);
-				intent.putExtra("selected", selectedPaper);
-				startActivity(intent);
 				
+				Intent in = new Intent();
+				if(selectedPaper !=null)
+				{
+			    
+				in.putExtra("selected", selectedPaper);
+				
+				}
+				else
+				{
+					in.putExtra("selected", "");
+				}
+				setResult(1,in);
 				finish();
 			}
 			

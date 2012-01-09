@@ -4,6 +4,7 @@ import itk.ppke.stock.R;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 import java.util.Vector;
@@ -33,6 +34,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
 
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -41,6 +43,7 @@ import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -67,6 +70,9 @@ public class Main extends Activity {
 	private Date fromDate;
 	private Vector<String> favPaperNames;
 
+	private Dialog timeSelectDialog;
+	
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -103,7 +109,7 @@ public class Main extends Activity {
 		final TextView infobarTextView = (TextView) findViewById(R.infobar.textview);
 		infobarTextView.setText(R.string.infobar_default);
 
-		final Dialog timeSelectDialog = new Dialog(this);
+		timeSelectDialog = new Dialog(this);
 		timeSelectDialog.setContentView(R.layout.time_select_dialog);
 		timeSelectDialog.setTitle(R.string.select_day);
 		timeSelectDialog.setCancelable(true);
@@ -111,7 +117,7 @@ public class Main extends Activity {
 		selectorListAllFav.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				Intent intent = new Intent(getApplicationContext(), ChartSelector.class);
-				startActivity(intent);
+				startActivityForResult(intent,1);
 			}
 		});
 
@@ -191,6 +197,10 @@ public class Main extends Activity {
 					// progressDialog.dismiss();
 					sendInfoBarString();
 				}
+				if (msg.what == 2) {
+					// TODO nincs kapcsoalt, nincs adat, 
+					Toast.makeText(getApplicationContext(), msg.getData().getString("error"), Toast.LENGTH_SHORT).show();
+				}
 			}
 
 			public void sendInfoBarString() {
@@ -226,6 +236,10 @@ public class Main extends Activity {
 				if (msg.what == 1) {
 					// progressDialog.dismiss();
 					sendPaperNames();
+				}
+				if (msg.what == 2) {
+					// TODO nincs kapcsoalt, nincs adat, 
+					Toast.makeText(getApplicationContext(), msg.getData().getString("error"), Toast.LENGTH_SHORT).show();
 				}
 			}
 
@@ -271,32 +285,61 @@ public class Main extends Activity {
 					chart.repaint();
 				}
 				if (msg.what == 1) {
-					progressDialog.dismiss();
+					
+						progressDialog.dismiss();
+					
 				}
 				if (msg.what == 2) {
-					// TODO ha nincs kapcsolat
+					// TODO nincs kapcsoalt, nincs adat, 
+					progressDialog.dismiss();
+					Toast.makeText(getApplicationContext(), msg.getData().getString("error"), Toast.LENGTH_SHORT).show();
 				}
 			}
 		};
 
 	}
 
+	
+	
+	
+	
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		
+		super.onActivityResult(requestCode, resultCode, data);
+		
+		
+		if(data.getStringExtra("selected") != null)
+		{
+			this.paperName = data.getStringExtra("selected");
+		Toast.makeText(getApplicationContext(), "Selected: " + paperName, Toast.LENGTH_SHORT).show();
+		final AutoCompleteTextView selectorAutoCompleteView = (AutoCompleteTextView) findViewById(R.selector.autocomplete);
+		selectorAutoCompleteView.setText(this.paperName);
+		}
+		
+	}
+
 	@Override
 	protected void onResume() {
 		super.onResume();
 		
-		// itt kapja el a kiválasztott chartot ha a ChartSelectorban rákattintott
-		// ha null, akkor egy default értéket kell beállítani
-		String selected = getIntent().getStringExtra("selected");
-		Toast.makeText(getApplicationContext(), "Selected: " + selected, Toast.LENGTH_SHORT).show();
+		// itt kapja el a kivï¿½lasztott chartot ha a ChartSelectorban rï¿½kattintott
+		// ha null, akkor egy default ï¿½rtï¿½ket kell beï¿½llï¿½tani
 		
+
 		setStockDataHandler();
 		getPaperName();
 		getFromDate();
 		
-		progressDialog = ProgressDialog.show(Main.this, "", getString(R.string.loading_));
-		new GetDataThread(stockDataHandler, paperName, fromDate, fromDate, getApplicationContext());
 		
+		if(paperName != null && !paperName.equals(""))
+		{
+			progressDialog = ProgressDialog.show(Main.this, "", getString(R.string.loading_));
+			
+			new GetDataThread(stockDataHandler, paperName, fromDate, fromDate, getApplicationContext());
+			
+		}
 		if (chart == null) {
 			renderer = new XYMultipleSeriesRenderer();
 			setupRenderer(renderer);
@@ -314,6 +357,7 @@ public class Main extends Activity {
 			dataset.addSeries(volumeSeries);
 			currentPriceSeries = priceSeries;
 			currentVolumeSeries = volumeSeries;
+			
 
 			chart = ChartFactory.getTimeChartView(this, dataset, renderer, "yyyy.MM.dd. hh:mm");
 			chartLayout.addView(chart);
@@ -343,19 +387,37 @@ public class Main extends Activity {
 	private void getFromDate() {
 		// TODO this.fromDate Date bealitase ha meg nem lenne beallitva
 		// legyen deffault datum
-		// csak a teszt miatt
-		final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-
-		try {
-			fromDate = dateFormat.parse("2008-02-25");
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
+				
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		DatePicker datePicker = (DatePicker) timeSelectDialog.findViewById(R.date_picker.from_date);
+		
+		fromDate = new Date();
+		
+		Log.e("year",""+datePicker.getYear());
+		Log.e("month",""+datePicker.getMonth());
+		Log.e("day",""+datePicker.getDayOfMonth());
+		
+		int year = 2008;
+		int month = 01;
+		int day = 25;
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(year, month, day);
+		
+		
+		
+		fromDate = calendar.getTime();
+		
+		Log.e("data", dateFormat.format(fromDate));
+		
 	}
 
 	private void getPaperName() {
 		// TODO this.paperName String ertekenek odaadasa
-		this.paperName = "TVK";
+		
+		final AutoCompleteTextView selectorAutoCompleteView = (AutoCompleteTextView) findViewById(R.selector.autocomplete);
+
+		this.paperName = selectorAutoCompleteView.getText().toString();
+		
 	}
 
 	private void setupRenderer(XYMultipleSeriesRenderer renderer) {
